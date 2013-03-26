@@ -26,19 +26,19 @@ For the server:
 
     securityprovider = x509
 
-    plugin.x509_serializer = yaml
-    plugin.x509_cacert = /etc/mcollective/server_cacert.pem
-    plugin.x509_server_key = /etc/mcollective/server_key.pem
-    plugin.x509_server_cert = /etc/mcollective/server_cert.pem
+    plugin.x509.serializer = yaml
+    plugin.x509.cacert = /etc/mcollective/server_cacert.pem
+    plugin.x509.server_key = /etc/mcollective/server_key.pem
+    plugin.x509.server_cert = /etc/mcollective/server_cert.pem
 
 For the client:
 
     securityprovider = x509
 
-    plugin.x509_serializer = yaml
-    plugin.x509_cacert = /etc/mcollective/client_cacert.pem
-    plugin.x509_client_key = /etc/mcollective/client_key.pem
-    plugin.x509_client_cert = /etc/mcollective/client_cert.pem
+    plugin.x509.serializer = yaml
+    plugin.x509.cacert = /etc/mcollective/client_cacert.pem
+    plugin.x509.client_key = /etc/mcollective/client_key.pem
+    plugin.x509.client_cert = /etc/mcollective/client_cert.pem
 
 # Certificate Management #
 

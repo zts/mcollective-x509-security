@@ -7,18 +7,18 @@ module MCollective
     # client.cfg:
     #
     #   securityprovider = x509
-    #   plugin.x509_serializer = yaml
-    #   plugin.x509_cacert = /home/john/.mc/cacert.pem
-    #   plugin.x509_client_key = /home/john/.mc/john-key.pem
-    #   plugin.x509_client_cert = /home/john/.mc/john-cert.pem
+    #   plugin.x509.serializer = yaml
+    #   plugin.x509.cacert = /home/john/.mc/cacert.pem
+    #   plugin.x509.client_key = /home/john/.mc/john-key.pem
+    #   plugin.x509.client_cert = /home/john/.mc/john-cert.pem
     #
     # server.cfg:
     #
     #   securityprovider = x509
-    #   plugin.x509_serializer = yaml
-    #   plugin.x509_cacert = /etc/mcollective/server_cacert.pem
-    #   plugin.x509_server_key = /etc/mcollective/server_key.pem
-    #   plugin.x509_server_cert = /etc/mcollective/server_cert.pem
+    #   plugin.x509.serializer = yaml
+    #   plugin.x509.cacert = /etc/mcollective/server_cacert.pem
+    #   plugin.x509.server_key = /etc/mcollective/server_key.pem
+    #   plugin.x509.server_cert = /etc/mcollective/server_cert.pem
 
     class X509 < Base
 
@@ -101,7 +101,7 @@ module MCollective
       private
       # Serializes a message using the configured encoder
       def serialize(msg)
-        serializer = @config.pluginconf["x509_serializer"] || "marshal"
+        serializer = @config.pluginconf["x509.serializer"] || "marshal"
 
         Log.debug("Serializing using #{serializer}")
 
@@ -115,7 +115,7 @@ module MCollective
 
       # De-Serializes a message using the configured encoder
       def deserialize(msg)
-        serializer = @config.pluginconf["x509_serializer"] || "marshal"
+        serializer = @config.pluginconf["x509.serializer"] || "marshal"
 
         Log.debug("De-Serializing using #{serializer}")
 
@@ -132,58 +132,58 @@ module MCollective
       def cacert
         return ENV["MCOLLECTIVE_X509_CACERT"] if ENV.include?("MCOLLECTIVE_X509_CACERT")
 
-        unless @config.pluginconf.include?("x509_cacert")
-          raise("No plugin.x509_cacert configuration option specified")
+        unless @config.pluginconf.include?("x509.cacert")
+          raise("No plugin.x509.cacert configuration option specified")
         end
 
-        cert_text = File.read(@config.pluginconf["x509_cacert"])
+        cert_text = File.read(@config.pluginconf["x509.cacert"])
         cert = OpenSSL::X509::Certificate.new(cert_text)
 
         return cert
       end
 
       # Figures out the client private key either from MCOLLECTIVE_X509_KEY or the
-      # plugin.x509_client_key config option
+      # plugin.x509.client_key config option
       def client_key_path
         return ENV["MCOLLECTIVE_X509_KEY"] if ENV.include?("MCOLLECTIVE_X509_KEY")
 
-        unless @config.pluginconf.include?("x509_client_key")
-          raise("No plugin.x509_client_key configuration option specified")
+        unless @config.pluginconf.include?("x509.client_key")
+          raise("No plugin.x509.client_key configuration option specified")
         end
 
-        return @config.pluginconf["x509_client_key"]
+        return @config.pluginconf["x509.client_key"]
       end
 
       # Figures out the client public key either from MCOLLECTIVE_CLIENT_CERT or the
-      # plugin.x509_client_cert config option
+      # plugin.x509.client_cert config option
       def client_cert_path
         return ENV["MCOLLECTIVE_X509_cert"] if ENV.include?("MCOLLECTIVE_X509_CERT")
 
-        unless @config.pluginconf.include?("x509_client_cert")
-          raise("No plugin.x509_client_cert configuration option specified")
+        unless @config.pluginconf.include?("x509.client_cert")
+          raise("No plugin.x509.client_cert configuration option specified")
         end
 
-        return @config.pluginconf["x509_client_cert"]
+        return @config.pluginconf["x509.client_cert"]
       end
 
       # Figures out the server private key either from MCOLLECTIVE_X509_KEY or the
-      # plugin.x509_server_key config option
+      # plugin.x509.server_key config option
       def server_key_path
-        unless @config.pluginconf.include?("x509_server_key")
-          raise("No plugin.x509_server_key configuration option specified")
+        unless @config.pluginconf.include?("x509.server_key")
+          raise("No plugin.x509.server_key configuration option specified")
         end
 
-        return @config.pluginconf["x509_server_key"]
+        return @config.pluginconf["x509.server_key"]
       end
 
       # Figures out the server public key either from MCOLLECTIVE_SERVER_CERT or the
-      # plugin.x509_server_cert config option
+      # plugin.x509.server_cert config option
       def server_cert_path
-        unless @config.pluginconf.include?("x509_server_cert")
-          raise("No plugin.x509_server_cert configuration option specified")
+        unless @config.pluginconf.include?("x509.server_cert")
+          raise("No plugin.x509.server_cert configuration option specified")
         end
 
-        return @config.pluginconf["x509_server_cert"]
+        return @config.pluginconf["x509.server_cert"]
       end
 
       def key
