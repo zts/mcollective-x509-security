@@ -1,5 +1,6 @@
 require 'base64'
 require 'openssl'
+require 'pp'
 
 module MCollective
   module Security
@@ -67,9 +68,20 @@ module MCollective
 
       # Encodes a request msg
       def encoderequest(sender, msg, requestid, filter, target_agent, target_collective, ttl=60)
+        Log.debug("x509 encoding request #{requestid} from sender #{sender} with msg " + msg.to_s)
+        
+        unless target_agent == 'discovery'
+          Log.debug("x509 caller, encoding: " + msg[:caller].encoding.to_s)
+          Log.debug("x509 caller, unserialised: " + msg[:caller])
+          Log.debug("x509 caller, serialised, take 1: " + serialize(msg[:caller]))
+          msg[:caller].force_encoding('UTF-8')
+          Log.debug("x509 caller, serialised, take 2: " + serialize(msg[:caller]))
+        end
         req = create_request(requestid, filter, "", @initiated_by, target_agent, target_collective, ttl)
 
         serialized = serialize(msg)
+        Log.debug("x509 serialized request #{requestid} msg to " + serialized.to_s)
+
         sig, cert = sign(serialized)
 
         req[:sig] = sig
