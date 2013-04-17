@@ -21,6 +21,13 @@ module MCollective
     #   plugin.x509.server_cert = /etc/mcollective/server_cert.pem
 
     class X509 < Base
+      def initialize
+        super
+        @serializer = @config.pluginconf["x509.serializer"] || "marshal"
+        if @serializer == 'yaml'
+          YAML::ENGINE.yamler= 'syck' if defined?(YAML::ENGINE)
+        end
+      end
 
       def valid_callerid?(callerid)
         begin
@@ -113,11 +120,9 @@ module MCollective
       private
       # Serializes a message using the configured encoder
       def serialize(msg)
-        serializer = @config.pluginconf["x509.serializer"] || "marshal"
+        Log.debug("Serializing using #{@serializer}")
 
-        Log.debug("Serializing using #{serializer}")
-
-        case serializer
+        case @serializer
         when "yaml"
           return YAML.dump(msg)
         else
@@ -127,11 +132,9 @@ module MCollective
 
       # De-Serializes a message using the configured encoder
       def deserialize(msg)
-        serializer = @config.pluginconf["x509.serializer"] || "marshal"
+        Log.debug("De-Serializing using #{@serializer}")
 
-        Log.debug("De-Serializing using #{serializer}")
-
-        case serializer
+        case @serializer
         when "yaml"
           return YAML.load(msg)
         else
