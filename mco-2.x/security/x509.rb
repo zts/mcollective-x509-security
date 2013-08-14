@@ -229,6 +229,9 @@ module MCollective
 
       # Sign message with the appropriate private key
       def sign(message)
+        # remove trailing whitespace - will be stripped by YAML,
+        # breaking the signature verification.
+        message.gsub!(/\s+$/, '')
         sig = Base64.encode64(key.sign(OpenSSL::Digest::SHA1.new, message))
         return sig, cert.to_s
       end
