@@ -1,5 +1,6 @@
 require 'base64'
 require 'openssl'
+require 'rbconfig'
 
 module MCollective
   module Security
@@ -25,7 +26,11 @@ module MCollective
         super
         @serializer = @config.pluginconf["x509.serializer"] || "marshal"
         if @serializer == 'yaml'
-          YAML::ENGINE.yamler= 'syck' if defined?(YAML::ENGINE)
+          require 'yaml'
+          if RbConfig::CONFIG['MAJOR'] == '2'
+            require 'syck'
+          end
+          YAML::ENGINE.yamler = 'syck'
         end
       end
 
