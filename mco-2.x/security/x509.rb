@@ -30,7 +30,7 @@ module MCollective
           if RbConfig::CONFIG['MAJOR'] == '2'
             require 'syck'
           end
-          YAML::ENGINE.yamler = 'syck'
+          YAML::ENGINE.yamler = 'syck' if defined?(YAML::ENGINE)
         end
       end
 
